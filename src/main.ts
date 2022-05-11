@@ -1,17 +1,11 @@
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { mailConfig } from './mail.config';
+import { swaggerConfig } from './swagger.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const config = new DocumentBuilder()
-    .setTitle('First Nest App')
-    .setDescription('Yayyy')
-    .setVersion('1.0')
-    .addTag('NestJs')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-  await app.listen(3000);
+  const app = await NestFactory.create(AppModule, { cors: true });
+  swaggerConfig(app)
+  await app.listen(3001);
 }
 bootstrap();

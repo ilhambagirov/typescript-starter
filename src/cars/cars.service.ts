@@ -1,12 +1,17 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable } from '@nestjs/common';
+import { error } from 'console';
+import e from 'express';
 import { Car } from './car.model';
 import { CarRequestDto } from './Car.request.dto';
+import { SentMessageInfo } from 'nodemailer';
 
 @Injectable()
 export class CarsService {
     constructor(
         @Inject('CARS_REPOSITORY')
-        private carsRepository: typeof Car
+        private carsRepository: typeof Car,
+        private readonly mailerService: MailerService
     ) { }
     async findAll(): Promise<Car[]> {
         return await this.carsRepository.findAll<Car>();
@@ -34,5 +39,15 @@ export class CarsService {
                 id
             }
         });
+    }
+
+    async sendEmail(content: string, email: string): Promise<any> {
+        this.mailerService.sendMail({
+            to: email,
+            from: 'ilikobagirov@gmail.com',
+            subject: 'Really ??? ✔',
+            text: content,
+            html: `<b>${content}</b>`,
+        }).then()
     }
 }
